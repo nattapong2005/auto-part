@@ -74,7 +74,7 @@ if(isset($_POST['login'])) {
         $_SESSION['user'] = $user;
         $role = $user['role'];
         if($role == "admin") {
-            success("เข้าสู่ระบบสำเร็จ", "admin/main.php");
+            success("เข้าสู่ระบบสำเร็จ", "admin/index.php");
         }else if($role == "user") {
             success("เข้าสู่ระบบสำเร็จ", "index.php");
         }

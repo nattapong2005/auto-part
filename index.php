@@ -35,7 +35,7 @@ session_start();
                         <a class="nav-link active" aria-current="page"><i class="fa-solid fa-house"></i> หน้าหลัก</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#"><i class="fa-solid fa-pen"></i> เบิกจ่าย</a>
+                        <a class="nav-link" href="#"><i class="fa-solid fa-clock-rotate-left"></i> ประวัติการเบิก</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="logout.php"><i class="fa-solid fa-right-from-bracket"></i> ออกจากระบบ</a>
@@ -78,27 +78,21 @@ session_start();
                             ?>
                                 <tr>
                                     <td><?php echo $count; ?></td>
-                                    <td>
-                                        <input type="hidden" name="part_id[]" value="<?php echo $row['id']; ?>">
-                                        <?php echo $row['name']; ?>
-                                    </td>
-                                    <td><?php echo $row['stock']; ?></td>
                                     <?php
                                     if ($row['stock'] == 0) {
                                     ?>
+                                        <td><?php echo $row['name']; ?> </td>
+                                        <td><?php echo $row['stock']; ?></td>
+                                        <td><input class="form-control" type="number" disabled value="0"></td>
+                                        <td><button class="btn btn-danger" disabled type="submit">หมด</button></td>
+                                    <?php } else { ?>
                                         <td>
-                                            <input class="form-control" type="number" max="<?php echo $row['stock'] ?>" disabled name="quantity[]" value="0">
+                                            <input type="hidden" name="part_id[]" value="<?php echo $row['id']; ?>">
+                                            <?php echo $row['name']; ?>
                                         </td>
-                                        <td>
-                                            <button class="btn btn-danger" disabled type="submit">หมด</button>
-                                        </td>
-                                        <?php } else { ?>
-                                            <td>
-                                            <input class="form-control" type="number" max="<?php echo $row['stock'] ?>" name="quantity[]" value="0">
-                                        </td>
-                                        <td>
-                                            <button class="btn btn-primary" name="add" type="submit">เพิ่ม</button>
-                                        </td>
+                                        <td><?php echo $row['stock']; ?></td>
+                                        <td> <input class="form-control" type="number" max="<?php echo $row['stock'] ?>" name="quantity[]" value="0"></td>
+                                        <td><button class="btn btn-primary" name="add" type="submit">เพิ่ม</button></td>
                                     <?php } ?>
                                 </tr>
                             <?php } ?>
@@ -187,7 +181,7 @@ if (isset($_POST['add'])) {
             }
         }
     }
-
+    
     header('Location: ' . $_SERVER['PHP_SELF']);
     exit();
 }
