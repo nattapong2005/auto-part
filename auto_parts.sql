@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 07, 2025 at 07:12 PM
+-- Generation Time: Jan 08, 2025 at 07:04 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.0.28
 
@@ -20,6 +20,27 @@ SET time_zone = "+00:00";
 --
 -- Database: `auto_parts`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `departments`
+--
+
+CREATE TABLE `departments` (
+  `id` bigint(20) NOT NULL,
+  `name` varchar(30) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `departments`
+--
+
+INSERT INTO `departments` (`id`, `name`) VALUES
+(1, 'ผลิตชิ้นส่วน'),
+(2, 'กระบะ'),
+(3, 'แชสซีส์'),
+(4, 'รถตู้');
 
 -- --------------------------------------------------------
 
@@ -62,17 +83,10 @@ CREATE TABLE `requests` (
 --
 
 INSERT INTO `requests` (`id`, `user_id`, `dates`, `status`) VALUES
-(1, 1, '2025-01-07 18:41:32', 'pending'),
-(2, 1, '2025-01-07 18:45:11', 'pending'),
-(3, 1, '2025-01-07 18:53:17', 'pending'),
-(4, 1, '2025-01-07 18:54:07', 'pending'),
-(5, 1, '2025-01-07 18:54:16', 'pending'),
-(6, 1, '2025-01-07 18:56:37', 'pending'),
-(7, 1, '2025-01-07 18:57:30', 'pending'),
-(8, 1, '2025-01-07 18:57:44', 'pending'),
-(9, 1, '2025-01-07 18:58:36', 'pending'),
-(10, 1, '2025-01-07 19:01:09', 'pending'),
-(11, 1, '2025-01-07 19:06:59', 'pending');
+(1, 1, '2025-01-08 14:35:03', 'approved'),
+(2, 1, '2025-01-08 14:59:32', 'approved'),
+(3, 1, '2025-01-08 15:47:46', 'rejected'),
+(4, 1, '2025-01-08 16:07:55', 'pending');
 
 -- --------------------------------------------------------
 
@@ -92,15 +106,16 @@ CREATE TABLE `request_details` (
 --
 
 INSERT INTO `request_details` (`id`, `request_id`, `part_id`, `amount`) VALUES
-(1, 3, 1, 5),
-(2, 4, 2, 5),
-(3, 5, 3, 5),
-(4, 6, 1, 2),
-(5, 7, 1, 2),
-(6, 8, 1, 1),
-(7, 9, 1, 2),
-(8, 10, 1, 1),
-(9, 11, 1, 2);
+(1, 1, 1, 4),
+(2, 1, 2, 4),
+(3, 1, 3, 5),
+(4, 2, 3, 2),
+(5, 2, 2, 1),
+(6, 2, 1, 1),
+(7, 3, 1, 1),
+(8, 3, 2, 1),
+(9, 4, 2, 5),
+(10, 4, 3, 5);
 
 -- --------------------------------------------------------
 
@@ -114,6 +129,8 @@ CREATE TABLE `users` (
   `lastname` varchar(40) NOT NULL,
   `username` varchar(40) NOT NULL,
   `password` varchar(40) NOT NULL,
+  `phone` varchar(10) NOT NULL,
+  `department_id` int(5) NOT NULL,
   `role` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -121,13 +138,19 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `name`, `lastname`, `username`, `password`, `role`) VALUES
-(1, 'test', 'kub', 'test', '202cb962ac59075b964b07152d234b70', 'user'),
-(2, 'admin', 'kub', 'admin', '202cb962ac59075b964b07152d234b70', 'admin');
+INSERT INTO `users` (`id`, `name`, `lastname`, `username`, `password`, `phone`, `department_id`, `role`) VALUES
+(1, 'admin', 'kub', 'admin', '202cb962ac59075b964b07152d234b70', '09999', 1, 'admin'),
+(2, 'test', 'kub000', 'test', '202cb962ac59075b964b07152d234b70', '07777', 1, 'user');
 
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `departments`
+--
+ALTER TABLE `departments`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `parts`
@@ -158,6 +181,12 @@ ALTER TABLE `users`
 --
 
 --
+-- AUTO_INCREMENT for table `departments`
+--
+ALTER TABLE `departments`
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
 -- AUTO_INCREMENT for table `parts`
 --
 ALTER TABLE `parts`
@@ -167,13 +196,13 @@ ALTER TABLE `parts`
 -- AUTO_INCREMENT for table `requests`
 --
 ALTER TABLE `requests`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `request_details`
 --
 ALTER TABLE `request_details`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `users`
