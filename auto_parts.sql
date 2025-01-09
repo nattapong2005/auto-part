@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 08, 2025 at 07:04 PM
+-- Generation Time: Jan 09, 2025 at 02:04 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.0.28
 
@@ -61,9 +61,9 @@ CREATE TABLE `parts` (
 --
 
 INSERT INTO `parts` (`id`, `img`, `name`, `description`, `stock`) VALUES
-(1, '', 'โค้ง', 'โค้ง', 0),
-(2, '', 'ลิ้ม', 'ลิ้ม', 0),
-(3, '', 'ปากนกแก้ว', 'ปากนกแก้ว', 0);
+(1, '', 'โค้ง', 'โค้ง', 1),
+(2, '', 'ลิ้ม', 'ลิ้ม', 98),
+(3, '', 'ปากนกแก้ว', 'ปากนกแก้ว', 98);
 
 -- --------------------------------------------------------
 
@@ -78,16 +78,6 @@ CREATE TABLE `requests` (
   `status` enum('pending','approved','rejected') DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `requests`
---
-
-INSERT INTO `requests` (`id`, `user_id`, `dates`, `status`) VALUES
-(1, 1, '2025-01-08 14:35:03', 'approved'),
-(2, 1, '2025-01-08 14:59:32', 'approved'),
-(3, 1, '2025-01-08 15:47:46', 'rejected'),
-(4, 1, '2025-01-08 16:07:55', 'pending');
-
 -- --------------------------------------------------------
 
 --
@@ -100,22 +90,6 @@ CREATE TABLE `request_details` (
   `part_id` int(11) NOT NULL,
   `amount` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `request_details`
---
-
-INSERT INTO `request_details` (`id`, `request_id`, `part_id`, `amount`) VALUES
-(1, 1, 1, 4),
-(2, 1, 2, 4),
-(3, 1, 3, 5),
-(4, 2, 3, 2),
-(5, 2, 2, 1),
-(6, 2, 1, 1),
-(7, 3, 1, 1),
-(8, 3, 2, 1),
-(9, 4, 2, 5),
-(10, 4, 3, 5);
 
 -- --------------------------------------------------------
 
@@ -140,7 +114,9 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`id`, `name`, `lastname`, `username`, `password`, `phone`, `department_id`, `role`) VALUES
 (1, 'admin', 'kub', 'admin', '202cb962ac59075b964b07152d234b70', '09999', 1, 'admin'),
-(2, 'test', 'kub000', 'test', '202cb962ac59075b964b07152d234b70', '07777', 1, 'user');
+(3, 'user', 'kub', 'test', '202cb962ac59075b964b07152d234b70', '0888', 1, 'user'),
+(4, 'john', 'ja', 'jj123', '202cb962ac59075b964b07152d234b70', '09989', 3, 'user'),
+(5, 'test88', 'eeiei', 'test88', '202cb962ac59075b964b07152d234b70', '1234567890', 4, 'user');
 
 --
 -- Indexes for dumped tables
@@ -190,25 +166,25 @@ ALTER TABLE `departments`
 -- AUTO_INCREMENT for table `parts`
 --
 ALTER TABLE `parts`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `requests`
 --
 ALTER TABLE `requests`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `request_details`
 --
 ALTER TABLE `request_details`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

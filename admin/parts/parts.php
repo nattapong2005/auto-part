@@ -1,7 +1,6 @@
 <?php
-
-$sql = "SELECT * FROM users";
-$query = mysqli_query($conn, $sql);
+$sql = "SELECT * FROM parts";
+$query = mysqli_query($conn,$sql);
 
 ?>
 
@@ -29,67 +28,39 @@ $query = mysqli_query($conn, $sql);
     </div>
 </div>
 
-<div class="row d-flex justify-content-center">
-    <div class="col-md-12 p-3 bg-white shadow-sm">
-        <div class="d-flex justify-content-between align-items-center">
-            <h3>รายชื่อผู้ใช้งาน</h3>
-            <a class="btn btn-sm btn-outline-secondary" href="?page=add_user">เพิ่มผู้ใช้งาน</a>
+<div class="row">
+    <div class="col-md-12 bg-white shadow-sm p-3">
+    <div class="d-flex justify-content-between align-items-center">
+            <h3>รายการอะไหล่</h3>
+            <a class="btn btn-sm btn-outline-secondary" href="?page=add_part">เพิ่มอะไหล่</a>
         </div>
         <div class="table-responsive">
-            <table class="table table-hover table-borderless" id="user">
-                <thead class="table-dark text-white">
+            <table class="table table-hover" id="parts">
+                <thead>
                     <tr>
                         <th>ไอดี</th>
-                        <th>ชื่อ-สกุล</th>
-                        <th>แผนก</th>
-                        <th>ตำแหน่ง</th>
+                        <th>รายการ</th>
+                        <th>รายละเอียด</th>
+                        <th>คงเหลือ</th>
                         <th>จัดการ</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php
-                    $sql = "SELECT 
-                        users.id,
-                        users.name,
-                        users.lastname,
-                        users.username,
-                        users.role,
-                        departments.name AS dname
-                    FROM 
-                        users
-                    JOIN 
-                        departments ON users.department_id = departments.id
-                    ORDER BY 
-                        users.role = 'admin' DESC, users.name";
-                    $query = mysqli_query($conn, $sql);
-                    while ($row = mysqli_fetch_array($query)) {
-                        switch ($row['role']) {
-                            case "admin": {
-                                    $role = "ผู้ดูแลระบบ";
-                                    $badge = "badge text-bg-danger";
-                                    break;
-                                }
-                            case "user": {
-                                    $role = "สมาชิก";
-                                    $badge = "badge text-bg-success";
-                                    break;
-                                }
-                        }
-
+                    while($row = mysqli_fetch_array($query)) {
                     ?>
-                        <tr>
-                            <td><?php echo $row['id'] ?></td>
-                            <td><?php echo "$row[name] $row[lastname]" ?></td>
-                            <td><?php echo $row['dname'] ?></td>
-                            <td><span class="<?php echo $badge ?>"><?php echo $role ?></span></td>
-                            <td>
-                                <a href="index.php?page=edit_user&id=<?php echo $row['id'] ?>" class="btn btn-sm btn-outline-primary">แก้ไข</a>
-                                <a class="btn btn-sm btn-outline-danger delete" data-bs-target="#confirm" data-bs-toggle="modal">ลบ</a>
-                            </td>
-                        </tr>
+                    <tr>
+                        <td><?php echo $row['id'] ?></td>
+                        <td><?php echo $row['name'] ?></td>
+                        <td><?php echo $row['description'] ?></td>
+                        <td><?php echo $row['stock'] ?></td>
+                        <td>
+                            <a class="btn btn-sm btn-outline-primary" href="?page=edit_part&id=<?php echo $row['id'] ?>">แก้ไข</a>
+                            <a class="btn btn-sm btn-outline-danger delete" data-bs-target="#confirm" data-bs-toggle="modal">ลบ</a>
+                        </td>
+                    </tr>
                     <?php } ?>
                 </tbody>
-
             </table>
         </div>
     </div>
@@ -97,7 +68,7 @@ $query = mysqli_query($conn, $sql);
 
 <script>
     $(document).ready(function() {
-        $('#user').DataTable({
+        $('#parts').DataTable({
             "language": {
                 "lengthMenu": "จำนวน _MENU_ หน้า",
                 "zeroRecords": "",
@@ -112,12 +83,10 @@ $query = mysqli_query($conn, $sql);
                 },
                 "search": "ค้นหา:",
                 "emptyTable": "ไม่มีข้อมูลในตาราง"
-            },
-
+            }
         });
     });
 </script>
-
 
 <script>
     $(document).ready(function() {
@@ -147,10 +116,10 @@ if (isset($_POST['del'])) {
 
     $id = $_POST['id'];
 
-    $sql = "DELETE FROM users WHERE id = $id";
+    $sql = "DELETE FROM parts WHERE id = $id";
     $query = mysqli_query($conn, $sql);
     if ($query) {
-        success("ลบผู้ใช้งานเรียบร้อย", "");
+        success("ลบอะไหล่เรียบร้อย", "");
     } else {
         failed("เกิดข้อผิดพลาด", "");
     }

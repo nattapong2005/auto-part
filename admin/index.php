@@ -26,20 +26,8 @@ include 'date_format.php';
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.bootstrap5.min.css">
 
-    <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
     <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap5.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.bootstrap5.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
-    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.colVis.min.js"></script>
-
-    
-
 
     <!-- Bootstrap Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
@@ -62,11 +50,6 @@ include 'date_format.php';
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark <?php echo isset($_GET['page']) && $_GET['page'] == "user" ? 'active' : '' ?>" href="?page=user">
-                            <i class="bi bi-person-fill"></i> ผู้ใช้งาน
-                        </a>
-                    </li>
-                    <li class="nav-item">
                         <a class="nav-link text-dark <?php echo isset($_GET['page']) && $_GET['page'] == "approved" ? 'active' : '' ?>" href="?page=approved">
                             <i class="bi bi-check-circle-fill"></i> อนุมัติแล้ว
                         </a>
@@ -77,8 +60,13 @@ include 'date_format.php';
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark" href="#">
-                            <i class="bi bi-gear-fill"></i> ตั้งค่า
+                        <a class="nav-link text-dark <?php echo isset($_GET['page']) && $_GET['page'] == "user" ? 'active' : '' ?>" href="?page=user">
+                            <i class="bi bi-person-fill"></i> ผู้ใช้งาน
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-dark <?php echo isset($_GET['page']) && $_GET['page'] == "parts" ? 'active' : '' ?>" href="?page=parts">
+                            <i class="bi bi-pencil-square"></i> อะไหล่
                         </a>
                     </li>
                 </ul>
@@ -96,11 +84,6 @@ include 'date_format.php';
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark <?php echo isset($_GET['page']) && $_GET['page'] == "user" ? 'active' : '' ?>" href="?page=user">
-                            <i class="bi bi-person-fill"></i> ผู้ใช้งาน
-                        </a>
-                    </li>
-                    <li class="nav-item">
                         <a class="nav-link text-dark <?php echo isset($_GET['page']) && $_GET['page'] == "approved" ? 'active' : '' ?>" href="?page=approved">
                             <i class="bi bi-check-circle-fill"></i> อนุมัติแล้ว
                         </a>
@@ -111,8 +94,13 @@ include 'date_format.php';
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark" href="#">
-                            <i class="bi bi-gear-fill"></i> ตั้งค่า
+                        <a class="nav-link text-dark <?php echo isset($_GET['page']) && $_GET['page'] == "user" ? 'active' : '' ?>" href="?page=user">
+                            <i class="bi bi-person-fill"></i> ผู้ใช้งาน
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-dark <?php echo isset($_GET['page']) && $_GET['page'] == "parts" ? 'active' : '' ?>" href="?page=parts">
+                            <i class="bi bi-pencil-square"></i> อะไหล่
                         </a>
                     </li>
                 </ul>
@@ -146,6 +134,18 @@ include 'date_format.php';
             }
 
             switch ($page) {
+                case "parts": {
+                    $file = "parts/parts.php";
+                    break;
+                }
+                case "add_part": {
+                    $file = "parts/add_part.php";
+                    break;
+                }
+                case "edit_part": {
+                    $file = "parts/edit_part.php";
+                    break;
+                }
                 case "user": {
                         $file = "users/user.php";
                         break;

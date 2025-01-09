@@ -30,13 +30,13 @@ include 'function.php';
                         <h1 class="fw-bold">เข้าสู่ระบบ</h1>
                         <form action=""  method="POST">
                             <label class="form-label"><i class="fa-solid fa-user"></i> ผู้ใช้งาน</label>
-                            <input type="text" placeholder="กรอกผู้ใช้งาน" class="form-control mb-2" name="username">
+                            <input type="text" placeholder="กรอกผู้ใช้งาน" class="form-control mb-2" name="username" required>
 
                             <label class="form-label"><i class="fa-solid fa-lock"></i> รหัสผ่าน</label>
-                            <input type="password" placeholder="กรอกรหัสผ่าน" class="form-control mb-2" name="password">
+                            <input type="password" placeholder="กรอกรหัสผ่าน" class="form-control mb-2" name="password" required>
 
                             <button name="login" type="submit" class="btn btn-danger w-100 mb-2">เข้าสู่ระบบ</button>
-                            <div class="d-flex justify-content-end mt-2"><a href="register.php">หากคุณยังไม่มีบัญชี? <span class="text-primary">สมัครสมาชิก</span></a></div>
+                            <div class="d-flex justify-content-end mt-2"><a href="register.php">หากคุณยังไม่มีบัญชี? <span class="text-primary">ลงทะเบียน</span></a></div>
                         </form>
                     </div>
                 </div>

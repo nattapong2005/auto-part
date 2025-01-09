@@ -4,7 +4,8 @@ session_start();
 include 'db.php';
 include 'font.php';
 include 'function.php';
-include 'checklogin.php'; 
+include 'checklogin.php';
+include 'admin/date_format.php';
 
 
 ?>
@@ -18,6 +19,26 @@ include 'checklogin.php';
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <script src="js/bootstrap.bundle.min.js"></script>
     <link rel="icon" href="img/logo.png" type="image/x-icon">
+
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.bootstrap5.min.css">
+
+    <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.bootstrap5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.colVis.min.js"></script>
+
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <title>เบิกจ่ายอะไหล่</title>
 </head>
 
@@ -34,10 +55,10 @@ include 'checklogin.php';
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page"><i class="fa-solid fa-house"></i> หน้าหลัก</a>
+                        <a href="index.php" class="nav-link <?php echo !isset($_GET['page']) && empty($_GET['page']) ? 'active' : '' ?>" aria-current="page"><i class="fa-solid fa-house"></i> หน้าหลัก</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#"><i class="fa-solid fa-clock-rotate-left"></i> ประวัติการเบิก</a>
+                        <a class="nav-link <?php echo isset($_GET['page']) && $_GET['page'] == "history" ? 'active' : '' ?>" href="?page=history"><i class="fa-solid fa-clock-rotate-left"></i> ประวัติการเบิก</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="logout.php"><i class="fa-solid fa-right-from-bracket"></i> ออกจากระบบ</a>
@@ -56,100 +77,32 @@ include 'checklogin.php';
     </div>
 
     <div class="container mt-5">
-        <div class="row d-flex justify-content-center mt-2">
-            <div class="col-md-6">
-                <h2><i class="fa-solid fa-list"></i> เลือกอะไหล่ที่ต้องการเบิก</h2>
-                <table class="table table-bordered table-hover">
-                    <form action="" method="POST">
-                        <thead>
-                            <tr>
-                                <th>ลำดับที่</th>
-                                <th>รายการ</th>
-                                <th>คงเหลือ</th>
-                                <th>จำนวน</th>
-                                <th>จัดการ</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php
-                            $sql = "SELECT * FROM parts";
-                            $query = mysqli_query($conn, $sql);
-                            $count = 0;
-                            while ($row = mysqli_fetch_array($query)) {
-                                $count++;
-                            ?>
-                                <tr>
-                                    <td><?php echo $count; ?></td>
-                                    <?php
-                                    if ($row['stock'] == 0) {
-                                    ?>
-                                        <td><?php echo $row['name']; ?> </td>
-                                        <td><?php echo $row['stock']; ?></td>
-                                        <td><input class="form-control" type="number" disabled value="0"></td>
-                                        <td><button class="btn btn-danger" disabled type="submit">หมด</button></td>
-                                    <?php } else { ?>
-                                        <td>
-                                            <input type="hidden" name="part_id[]" value="<?php echo $row['id']; ?>">
-                                            <?php echo $row['name']; ?>
-                                        </td>
-                                        <td><?php echo $row['stock']; ?></td>
-                                        <td> <input class="form-control" type="number" max="<?php echo $row['stock'] ?>" name="quantity[]" value="0"></td>
-                                        <td><button class="btn btn-primary" name="add" type="submit">เพิ่ม</button></td>
-                                    <?php } ?>
-                                </tr>
-                            <?php } ?>
-                        </tbody>
-                    </form>
-                </table>
 
-            </div>
-            <div class="col-md-6">
-                <h2><i class="fa-solid fa-cart-shopping"></i> รายการของคุณ</h2>
-                <table class="table table-bordered table-hover">
-                    <thead>
-                        <tr>
-                            <th>ลำดับที่</th>
-                            <th>รายการ</th>
-                            <th>จำนวนที่เบิก</th>
-                            <th>จัดการ</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php
-                        if (isset($_SESSION['cart'])) {
-                            $count = 0;
-                            foreach ($_SESSION['cart'] as $part_id => $quantity) {
+        <?php
+        if (isset($_GET['page'])) {
+            $page = $_GET['page'];
+        } else {
+            $page = "";
+        }
 
-                                $count++;
-                                $part_sql = "SELECT * FROM parts WHERE id = '$part_id'";
-                                $part_query = mysqli_query($conn, $part_sql);
-                                $part = mysqli_fetch_assoc($part_query);
+        switch ($page) {
 
-                                if ($quantity > $part['stock']) {
-                                    $quantity = $part['stock'];
-                                    $_SESSION['cart'][$part_id] = $part['stock'];
-                                }
+            case "history": {
+                    $file = "history.php";
+                    break;
+                }
+            case "history_details": {
+                    $file = "history_details.php";
+                    break;
+                }
+            default: {
+                    $file = "main.php";
+                    break;
+                }
+        }
+        include "$file";
+        ?>
 
-                        ?>
-                                <tr>
-                                    <td><?php echo $count; ?></td>
-                                    <td><?php echo $part['name']; ?></td>
-                                    <td><?php echo $quantity; ?></td>
-                                    <td>
-                                        <a href="decrease_cart.php?id=<?php echo $part_id; ?>" class="btn btn-danger">ลบ</a>
-                                    </td>
-                                </tr>
-                        <?php
-                            }
-                        }
-                        ?>
-                    </tbody>
-                </table>
-                <form action="" method="POST">
-                    <button type="submit" class="btn btn-success" name="checkout">ยืนยันการเบิก</button>
-                </form>
-            </div>
-        </div>
     </div>
 
 </body>
@@ -183,7 +136,7 @@ if (isset($_POST['add'])) {
             }
         }
     }
-    
+
     header('Location: ' . $_SERVER['PHP_SELF']);
     exit();
 }
@@ -225,19 +178,18 @@ if (isset($_POST['checkout'])) {
                                         VALUES ('$request_id', '$part_id', '$quantity')";
                 if (mysqli_query($conn, $request_details_sql)) {
                     // Update the stock after successful request
-                    $new_stock = $part['stock'] - $quantity;
-                    $update_stock_sql = "UPDATE parts SET stock = '$new_stock' WHERE id = '$part_id'";
-                    mysqli_query($conn, $update_stock_sql);
+                    // $new_stock = $part['stock'] - $quantity;
+                    // $update_stock_sql = "UPDATE parts SET stock = '$new_stock' WHERE id = '$part_id'";
+                    // mysqli_query($conn, $update_stock_sql);
+                    // Clear the cart after request is placed
+                    success("เบิกอะไหล่เรียบร้อย", "index.php");
+                    unset($_SESSION['cart']);
                 }
             } else {
-                echo "Insufficient stock for part: " . $part['name'];
+                failed("อะไหล่ไม่พอ", "index.php");
                 return;
             }
         }
-
-        // Clear the cart after request is placed
-        success("เบิกอะไหล่เรียบร้อย", "index.php");
-        unset($_SESSION['cart']);
     }
 }
 
@@ -249,3 +201,38 @@ if (isset($_POST['checkout'])) {
 
 ob_end_flush();
 ?>
+
+<style>
+    body {
+        overflow-x: hidden;
+    }
+    img.logo {
+        -webkit-animation: mover 1s infinite alternate;
+        animation: mover 1s infinite alternate;
+    }
+
+    img.logo {
+        -webkit-animation: mover 1s infinite alternate;
+        animation: mover 1s infinite alternate;
+    }
+
+    @-webkit-keyframes mover {
+        0% {
+            transform: translateY(0);
+        }
+
+        100% {
+            transform: translateY(-10px);
+        }
+    }
+
+    @keyframes mover {
+        0% {
+            transform: translateY(0);
+        }
+
+        100% {
+            transform: translateY(-10px);
+        }
+    }
+</style>

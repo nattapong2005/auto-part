@@ -3,10 +3,11 @@
     $id = $_GET['id'];
 
     $sqlCheck = "SELECT * FROM requests WHERE id = $id";
-    $queryCheck = mysqli_query($conn,$sqlCheck);
+    $queryCheck = mysqli_query($conn, $sqlCheck);
     $rowCheck = mysqli_fetch_array($queryCheck);
     $statusCheck = $rowCheck['status'];
-?>
+
+    ?>
 
  <div class="row mb-4 d-flex justify-content-center g-0">
      <div class="col-md-12 bg-white shadow-sm p-3">
@@ -14,6 +15,11 @@
              <h3>รายละเอียด</h3>
              <a class="text-dark" href="index.php"><i class="bi bi-arrow-left-short fs-3"></i></a>
          </div>
+         <?php 
+         if($statusCheck != "pending") {
+         ?>
+         <a class="btn btn-sm btn-primary mb-2 " href="print.php?id=<?php echo $id ?>">พิมพ์เอกสาร</a>
+         <?php } ?>
          <div class="table-responsive">
              <table class="table" id="list">
                  <thead>
@@ -81,11 +87,12 @@
                  </tbody>
              </table>
 
-             <?php if($statusCheck == "pending") { ?>
-             <div class="d-flex justify-content-end mt-2">
-                 <a class="btn me-2 px-3 btn-outline-primary" data-bs-target="#confirm<?php echo $count ?>" data-bs-toggle="modal">อนุมัติ</a>
-                 <a class="btn me-2 px-3 btn-outline-danger" data-bs-target="#rejected<?php echo $count ?>" data-bs-toggle="modal">ปฏิเสธ</a>
-             </div>
+             <?php if ($statusCheck == "pending") { ?>
+                 <div class="d-flex justify-content-end mt-2">
+                     <?php ?>
+                     <a class="btn me-2 px-3 btn-outline-primary" data-bs-target="#confirm<?php echo $count ?>" data-bs-toggle="modal">อนุมัติ</a>
+                     <a class="btn me-2 px-3 btn-outline-danger" data-bs-target="#rejected<?php echo $count ?>" data-bs-toggle="modal">ปฏิเสธ</a>
+                 </div>
              <?php } ?>
          </div>
      </div>
@@ -140,51 +147,73 @@
  </div>
 
  <script>
-$(document).ready(function() {
-    $('#list').DataTable({
-        "language": {
-            "lengthMenu": "จำนวน _MENU_ หน้า",
-            "zeroRecords": "",
-            "info": "แสดงหน้า _PAGE_ ถึง _PAGES_",
-            "infoEmpty": "ไม่พบข้อมูลที่บันทึก",
-            "infoFiltered": "(กรองจากทั้งหมด _MAX_ รายการ)",
-            "paginate": {
-                "first": "แรก",
-                "last": "สุดท้าย",
-                "next": "ถัดไป",
-                "previous": "กลับ"
-            },
-            "search": "ค้นหา:",
-            "emptyTable": "ไม่มีข้อมูลในตาราง"
-        },
-        "dom": 'Bfrtip',  // เพิ่ม B เพื่อแสดงปุ่ม
-        "buttons": [
-            {
-                extend: 'print',  // ใช้ฟังก์ชัน print ของ DataTables
-                text: 'พิมพ์เอกสาร',  // เปลี่ยนชื่อปุ่มเป็น 'พิมพ์เอกสาร'
-                title: '',
-    
-            }
-        ]
-    });
-});
+     $(document).ready(function() {
+         $('#list').DataTable({
+             "language": {
+                 "lengthMenu": "จำนวน _MENU_ หน้า",
+                 "zeroRecords": "",
+                 "info": "แสดงหน้า _PAGE_ ถึง _PAGES_",
+                 "infoEmpty": "ไม่พบข้อมูลที่บันทึก",
+                 "infoFiltered": "(กรองจากทั้งหมด _MAX_ รายการ)",
+                 "paginate": {
+                     "first": "แรก",
+                     "last": "สุดท้าย",
+                     "next": "ถัดไป",
+                     "previous": "กลับ"
+                 },
+                 "search": "ค้นหา:",
+                 "emptyTable": "ไม่มีข้อมูลในตาราง"
+             },
 
-
+         });
+     });
  </script>
 
  <?php
 
+
+
     if (isset($_POST['confirm'])) {
 
         $req_id = $_POST['req_id'];
-        $sql = "UPDATE requests SET status = 'approved' WHERE id = $req_id";
-        $query = mysqli_query($conn, $sql);
-        if ($query) {
+
+        $sqlDetails = "SELECT 
+                    request_details.part_id, 
+                    request_details.amount 
+                   FROM request_details 
+                   WHERE request_details.request_id = $req_id";
+        $queryDetails = mysqli_query($conn, $sqlDetails);
+
+        while ($rowDetail = mysqli_fetch_array($queryDetails)) {
+
+            $part_id = $rowDetail['part_id'];
+            $requested_amount = $rowDetail['amount'];
+            $sqlStock = "SELECT stock FROM parts WHERE id = $part_id";
+            $queryStock = mysqli_query($conn, $sqlStock);
+            $rowStock = mysqli_fetch_array($queryStock);
+
+            if ($rowStock['stock'] >= $requested_amount) {
+
+                $new_stock = $rowStock['stock'] - $requested_amount;
+                $sqlUpdateStock = "UPDATE parts SET stock = $new_stock WHERE id = $part_id";
+                mysqli_query($conn, $sqlUpdateStock);
+
+            } else {
+                failed("คงเหลือไม่เพียงพอ กรุณาเช็คสต๊อก", "?page=parts");
+                return;
+            }
+        }
+
+        $sqlApprove = "UPDATE requests SET status = 'approved' WHERE id = $req_id";
+        $queryApprove = mysqli_query($conn, $sqlApprove);
+
+        if ($queryApprove) {
             success("อนุมัติเรียบร้อย", "index.php");
         } else {
-            failed("เกิดข้อผิดพลาด", "");
+            failed("เกิดข้อผิดพลาด", "index.php");
         }
     }
+
 
     if (isset($_POST['rejected'])) {
 

@@ -1,6 +1,5 @@
 <form class="row p-3 bg-white shadow-sm" action="" method="POST">
     <h3>เพิ่มผู้ใช้งาน</h3>
-    <input type="hidden" name="oid" value="<?php echo $id ?>">
 
     <div class="col-md-6 mb-2">
         <label class="form-label">ชื่อ</label>

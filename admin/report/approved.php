@@ -8,6 +8,7 @@
                     <tr>
                         <th>ลำดับ</th>
                         <th>ร้องขอโดย</th>
+                        <th>แผนก</th>
                         <th>วันที่ร้องขอ</th>
                         <th>สถานะ</th>
                         <th>จัดการ</th>
@@ -16,9 +17,10 @@
                 <tbody>
                     <?php
                     $count = 0;
-                    $sql = "SELECT users.name,requests.dates,requests.status,requests.id FROM users
+                    $sql = "SELECT users.name,departments.name as dname,requests.dates,requests.status,requests.id FROM users
                             JOIN requests ON users.id = requests.user_id
-                            WHERE requests.status = 'approved' ";
+                            JOIN departments ON users.department_id = departments.id
+                            WHERE requests.status = 'approved'";
                     $query = mysqli_query($conn, $sql);
                     while ($row = mysqli_fetch_array($query)) {
                         switch($row['status']) {
@@ -43,7 +45,8 @@
                         <tr>
                             <td><?php echo $count; ?></td>
                             <td><?php echo $row['name']; ?></td>
-                            <td><?php echo formatThaiDate($row['dates']) ?></td>
+                            <td><?php echo $row['dname']; ?></td>
+                            <td><?php echo thaiDate($row['dates']) ?></td>
                             <td><span class="<?php echo $badge ?>"><?php echo $status ?></span></td>
                             <td>
                                 <a href="index.php?page=request_details&id=<?php echo $row['id'] ?>" class="btn btn-sm btn-outline-primary">รายละเอียด</a>
