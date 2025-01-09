@@ -19,15 +19,15 @@ $query = mysqli_query($conn, $sql);
 $row = mysqli_fetch_array($query);
 $department = $row['dname'];
 
-switch($row['role']) {
+switch ($row['role']) {
     case "admin": {
-        $role = "ผู้ดูแลระบบ";
-        break;
-    }
+            $role = "ผู้ดูแลระบบ";
+            break;
+        }
     case "user": {
-        $role = "สมาชิก";
-        break;
-    }
+            $role = "สมาชิก";
+            break;
+        }
 }
 ?>
 
@@ -54,19 +54,19 @@ switch($row['role']) {
         <label class="form-label">แผนก <span class="badge rounded-pill text-bg-secondary"><?php echo $department ?></span></label>
         <select name="department_id" class="form-select" required>
             <option value="" selected>เลือกแผนก</option>
-            <?php 
+            <?php
             $sql = "SELECT * FROM departments";
-            $query = mysqli_query($conn,$sql);
-            while($row = mysqli_fetch_array($query)) {
+            $query = mysqli_query($conn, $sql);
+            while ($row = mysqli_fetch_array($query)) {
             ?>
-            <option value="<?php echo $row['id'] ?>"><?php echo $row['name'] ?></option>
+                <option value="<?php echo $row['id'] ?>"><?php echo $row['name'] ?></option>
             <?php } ?>
         </select>
     </div>
 
     <div class="col-md-12 mb-2">
-    <label class="form-label">ตำแหน่ง <span class="badge rounded-pill text-bg-secondary"><?php echo $role ?></span></label>
-        <select name="role"  class="form-select" required>
+        <label class="form-label">ตำแหน่ง <span class="badge rounded-pill text-bg-secondary"><?php echo $role ?></span></label>
+        <select name="role" class="form-select" required>
             <option value="" selected>เลือกตำแหน่ง</option>
             <option value="user">สมาชิก</option>
             <option value="admin">ผู้ดูแลระบบ</option>
@@ -79,7 +79,7 @@ switch($row['role']) {
 
 <?php
 
-if(isset($_POST['edit'])) {
+if (isset($_POST['edit'])) {
     $oid = $_POST['oid'];
     $name = $_POST['name'];
     $lastname = $_POST['lastname'];
@@ -87,15 +87,13 @@ if(isset($_POST['edit'])) {
     $department_id = $_POST['department_id'];
     $role = $_POST['role'];
 
-
     $sql = "UPDATE users SET name='$name',lastname='$lastname',phone='$phone',department_id='$department_id',role='$role' WHERE id = $oid";
-    $query = mysqli_query($conn,$sql);
-    if($query) {
+    $query = mysqli_query($conn, $sql);
+    if ($query) {
         success("แก้ไขข้อมูลเรียบร้อย", "index.php?page=user");
-    }else {
+    } else {
         failed("เกิดข้อผิดพลาด", "index.php?page=user");
     }
-
 }
 
 

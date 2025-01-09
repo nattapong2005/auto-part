@@ -2,14 +2,17 @@
 
     $id = $_GET['id'];
 
-
-    ?>
+    $sqlCheck = "SELECT * FROM requests WHERE id = $id";
+    $queryCheck = mysqli_query($conn,$sqlCheck);
+    $rowCheck = mysqli_fetch_array($queryCheck);
+    $statusCheck = $rowCheck['status'];
+?>
 
  <div class="row mb-4 d-flex justify-content-center g-0">
      <div class="col-md-12 bg-white shadow-sm p-3">
          <div class="d-flex justify-content-between align-items-center mb-2">
-         <h3>รายละเอียด</h3>
-         <a class="text-dark" href="index.php"><i class="bi bi-arrow-left-short fs-3"></i></a>
+             <h3>รายละเอียด</h3>
+             <a class="text-dark" href="index.php"><i class="bi bi-arrow-left-short fs-3"></i></a>
          </div>
          <div class="table-responsive">
              <table class="table" id="list">
@@ -19,6 +22,7 @@
                          <th>รายการ</th>
                          <th>จำนวน</th>
                          <th>ร้องขอโดย</th>
+                         <th>สถานะ</th>
                      </tr>
                  </thead>
                  <tbody>
@@ -47,6 +51,23 @@
                         requests.id = $id";
                         $query = mysqli_query($conn, $sql);
                         while ($row = mysqli_fetch_array($query)) {
+                            switch ($row['status']) {
+                                case "pending": {
+                                        $status = "รออนุมัติ";
+                                        $badge = "badge rounded-pill text-bg-warning text-white";
+                                        break;
+                                    }
+                                case "approved": {
+                                        $status = "อนุมัติ";
+                                        $badge = "badge rounded-pill text-bg-success text-white";
+                                        break;
+                                    }
+                                case "rejected": {
+                                        $status = "ปฏิเสธ";
+                                        $badge = "badge rounded-pill text-bg-danger text-white";
+                                        $break;
+                                    }
+                            }
                             $count++;
                         ?>
                          <tr>
@@ -54,14 +75,18 @@
                              <td><?php echo $row['part_name']; ?></td>
                              <td><?php echo $row['amount']; ?></td>
                              <td><?php echo $row['user_name']; ?></td>
+                             <td><span class="<?php echo $badge ?>"><?php echo $status ?></span></td>
                          </tr>
                      <?php } ?>
                  </tbody>
              </table>
+
+             <?php if($statusCheck == "pending") { ?>
              <div class="d-flex justify-content-end mt-2">
                  <a class="btn me-2 px-3 btn-outline-primary" data-bs-target="#confirm<?php echo $count ?>" data-bs-toggle="modal">อนุมัติ</a>
                  <a class="btn me-2 px-3 btn-outline-danger" data-bs-target="#rejected<?php echo $count ?>" data-bs-toggle="modal">ปฏิเสธ</a>
              </div>
+             <?php } ?>
          </div>
      </div>
  </div>
@@ -115,25 +140,36 @@
  </div>
 
  <script>
-     $(document).ready(function() {
-         $('#list').DataTable({
-             "language": {
-                 "lengthMenu": "จำนวน _MENU_ หน้า",
-                 "zeroRecords": "",
-                 "info": "แสดงหน้า _PAGE_ ถึง _PAGES_",
-                 "infoEmpty": "ไม่พบข้อมูลที่บันทึก",
-                 "infoFiltered": "(กรองจากทั้งหมด _MAX_ รายการ)",
-                 "paginate": {
-                     "first": "แรก",
-                     "last": "สุดท้าย",
-                     "next": "ถัดไป",
-                     "previous": "กลับ"
-                 },
-                 "search": "ค้นหา:",
-                 "emptyTable": "ไม่มีข้อมูลในตาราง"
-             }
-         });
-     });
+$(document).ready(function() {
+    $('#list').DataTable({
+        "language": {
+            "lengthMenu": "จำนวน _MENU_ หน้า",
+            "zeroRecords": "",
+            "info": "แสดงหน้า _PAGE_ ถึง _PAGES_",
+            "infoEmpty": "ไม่พบข้อมูลที่บันทึก",
+            "infoFiltered": "(กรองจากทั้งหมด _MAX_ รายการ)",
+            "paginate": {
+                "first": "แรก",
+                "last": "สุดท้าย",
+                "next": "ถัดไป",
+                "previous": "กลับ"
+            },
+            "search": "ค้นหา:",
+            "emptyTable": "ไม่มีข้อมูลในตาราง"
+        },
+        "dom": 'Bfrtip',  // เพิ่ม B เพื่อแสดงปุ่ม
+        "buttons": [
+            {
+                extend: 'print',  // ใช้ฟังก์ชัน print ของ DataTables
+                text: 'พิมพ์เอกสาร',  // เปลี่ยนชื่อปุ่มเป็น 'พิมพ์เอกสาร'
+                title: '',
+    
+            }
+        ]
+    });
+});
+
+
  </script>
 
  <?php

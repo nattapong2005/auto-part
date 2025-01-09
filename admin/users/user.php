@@ -20,7 +20,7 @@ $query = mysqli_query($conn, $sql);
 
                 <div class="modal-body">
                     <center>
-                        <button type="submit" name="rejected" class="btn btn-primary">ยืนยัน</button>
+                        <button type="submit" name="del" class="btn btn-primary">ยืนยัน</button>
                         <button type="button" class="btn btn-danger" data-bs-dismiss="modal">ยกเลิก</button>
                     </center>
                 </div>
@@ -30,15 +30,17 @@ $query = mysqli_query($conn, $sql);
 </div>
 
 <div class="row d-flex justify-content-center">
-    <div class="col-md-12">
+    <div class="col-md-12 p-3 bg-white shadow-sm">
+        <div class="d-flex justify-content-between align-items-center">
         <h3>รายชื่อผู้ใช้งาน</h3>
+        <a class="btn btn-sm btn-outline-secondary" href="?page=add_user">เพิ่มผู้ใช้งาน</a>
+        </div>
         <div class="table-responsive">
-            <table class="table table-hover shadow-sm table-borderless">
+            <table class="table table-hover table-borderless">
                 <thead class="table-dark text-white">
                     <tr>
                         <th>ไอดี</th>
                         <th>ชื่อ-สกุล</th>
-                        <th>ผู้ใช้งาน</th>
                         <th>แผนก</th>
                         <th>ตำแหน่ง</th>
                         <th>จัดการ</th>
@@ -78,7 +80,6 @@ $query = mysqli_query($conn, $sql);
                         <tr>
                             <td><?php echo $row['id'] ?></td>
                             <td><?php echo "$row[name] $row[lastname]" ?></td>
-                            <td><?php echo $row['username'] ?></td>
                             <td><?php echo $row['dname'] ?></td>
                             <td><span class="<?php echo $badge ?>"><?php echo $role ?></span></td>
                             <td>
@@ -116,7 +117,7 @@ $query = mysqli_query($conn, $sql);
 
 <?php
 
-if($_SERVER['REQUEST_METHOD'] == "POST") {
+if(isset($_POST['del'])) {
 
     $id = $_POST['id'];
 

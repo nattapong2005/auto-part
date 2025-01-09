@@ -67,7 +67,7 @@
 
 <div class="row mb-4 d-flex justify-content-center g-0">
     <div class="col-md-12 bg-white shadow-sm p-3">
-        <h3>รายการเบิก รออนุมัติ</h3>
+        <h3>รายการเบิก <span class="text-warning">รออนุมัติ</span></h3>
         <div class="table-responsive">
             <table class="table" id="list">
                 <thead>

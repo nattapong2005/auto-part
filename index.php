@@ -1,9 +1,11 @@
 <?php
 ob_start();
+session_start();
 include 'db.php';
 include 'font.php';
 include 'function.php';
-session_start();
+include 'checklogin.php'; 
+
 
 ?>
 

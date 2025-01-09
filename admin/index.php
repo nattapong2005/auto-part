@@ -1,9 +1,11 @@
 <?php
-
+session_start();
 include 'font.php';
 include '../db.php';
 include '../function.php';
+include '../checklogin.php';
 include 'date_format.php';
+
 
 ?>
 
@@ -20,8 +22,24 @@ include 'date_format.php';
     <script src="../js/bootstrap.bundle.min.js"></script>
 
     <!-- Data Tables -->
-    <link href="https://cdn.datatables.net/v/bs5/dt-1.13.8/datatables.min.css" rel="stylesheet">
-    <script src="https://cdn.datatables.net/v/bs5/dt-1.13.8/datatables.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.bootstrap5.min.css">
+
+    <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.bootstrap5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.colVis.min.js"></script>
+
+    
+
 
     <!-- Bootstrap Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
@@ -39,18 +57,23 @@ include 'date_format.php';
             <div class="offcanvas-body">
                 <ul class="nav flex-column">
                     <li class="nav-item">
-                        <a class="nav-link text-dark" href="#">
+                        <a class="nav-link text-dark <?php echo !isset($_GET['page']) && empty($_GET['page']) ? 'active' : '' ?>" href="index.php">
                             <i class="bi bi-house-door-fill"></i> หน้าหลัก
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark" href="#">
+                        <a class="nav-link text-dark <?php echo isset($_GET['page']) && $_GET['page'] == "user" ? 'active' : '' ?>" href="?page=user">
                             <i class="bi bi-person-fill"></i> ผู้ใช้งาน
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark" href="#">
-                            <i class="bi bi-bar-chart-fill"></i> รายงาน
+                        <a class="nav-link text-dark <?php echo isset($_GET['page']) && $_GET['page'] == "approved" ? 'active' : '' ?>" href="?page=approved">
+                            <i class="bi bi-check-circle-fill"></i> อนุมัติแล้ว
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-dark <?php echo isset($_GET['page']) && $_GET['page'] == "rejected" ? 'active' : '' ?>" href="?page=rejected">
+                            <i class="bi bi-x-circle-fill"></i> ปฏิเสธแล้ว
                         </a>
                     </li>
                     <li class="nav-item">
@@ -78,8 +101,13 @@ include 'date_format.php';
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark" href="#">
-                            <i class="bi bi-bar-chart-fill"></i> รายงาน
+                        <a class="nav-link text-dark <?php echo isset($_GET['page']) && $_GET['page'] == "approved" ? 'active' : '' ?>" href="?page=approved">
+                            <i class="bi bi-check-circle-fill"></i> อนุมัติแล้ว
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-dark <?php echo isset($_GET['page']) && $_GET['page'] == "rejected" ? 'active' : '' ?>" href="?page=rejected">
+                            <i class="bi bi-x-circle-fill"></i> ปฏิเสธแล้ว
                         </a>
                     </li>
                     <li class="nav-item">
@@ -119,15 +147,27 @@ include 'date_format.php';
 
             switch ($page) {
                 case "user": {
-                        $file = "user.php";
+                        $file = "users/user.php";
+                        break;
+                    }
+                case "add_user": {
+                        $file = "users/add_user.php";
                         break;
                     }
                 case "edit_user": {
-                        $file = "edit_user.php";
+                        $file = "users/edit_user.php";
                         break;
                     }
                 case "request_details": {
                         $file = "request_details.php";
+                        break;
+                    }
+                case "approved": {
+                        $file = "report/approved.php";
+                        break;
+                    }
+                case "rejected": {
+                        $file = "report/rejected.php";
                         break;
                     }
                 default: {
@@ -166,6 +206,7 @@ include 'date_format.php';
         border: none;
         border-radius: 0px;
     }
+
     .active {
         background-color: #dc3545;
         color: white !important;
