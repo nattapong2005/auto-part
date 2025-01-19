@@ -79,6 +79,8 @@ if(isset($_POST['login'])) {
             success("เข้าสู่ระบบสำเร็จ", "admin/index.php");
         }else if($role == "user") {
             success("เข้าสู่ระบบสำเร็จ", "index.php");
+        }else if($role == "store") {
+            success("เข้าสู่ระบบสำเร็จ", "store/index.php");
         }
 
     }else {

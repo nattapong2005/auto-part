@@ -16,14 +16,14 @@
         </div>
     </div>
     <?php
-    $sql = "SELECT * FROM requests WHERE status = 'approved'";
+    $sql = "SELECT * FROM requests WHERE status = 'confirmed'";
     $query = mysqli_query($conn, $sql);
     $rowCount = mysqli_num_rows($query);
     ?>
     <div class="col-md-3 mb-2">
         <div class="card shadow-sm bg-white w-100">
             <div class="card-body">
-                <h5 class="card-title">อนุมัติแล้ว</h5>
+                <h5 class="card-title">รับสำเร็จ</h5>
                 <div class="d-flex align-items-center justify-content-between">
                     <p class="card-text fs-4 fw-bold"><?php echo $rowCount ?></p>
                     <span class="display-4"><i class="bi bi-check-circle text-success"></i></span>

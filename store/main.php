@@ -1,3 +1,21 @@
+<div class="row mb-2">
+    <?php
+    $sql = "SELECT * FROM requests WHERE status = 'approved'";
+    $query = mysqli_query($conn, $sql);
+    $rowCount = mysqli_num_rows($query);
+    ?>
+    <div class="col-md-12 mb-2">
+        <div class="card shadow-sm bg-white w-100">
+            <div class="card-body">
+                <h2 class="card-title">รอรับอะไหล่</h2>
+                <div class="d-flex align-items-center justify-content-between">
+                    <p class="card-text fs-4 fw-bold"><?php echo $rowCount ?></p>
+                    <span class="display-4"><i class="bi bi-alarm-fill text-primary"></i></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 <div class="row mb-4 d-flex justify-content-center g-0">
     <div class="col-md-12 bg-white shadow-sm p-3">
@@ -20,30 +38,30 @@
                     $sql = "SELECT users.name,departments.name as dname,requests.dates,requests.status,requests.id FROM users
                             JOIN requests ON users.id = requests.user_id
                             JOIN departments ON users.department_id = departments.id
-                            WHERE requests.status = 'approved'";
+                            WHERE requests.status = 'approved' ";
                     $query = mysqli_query($conn, $sql);
                     while ($row = mysqli_fetch_array($query)) {
-                        switch($row['status']) {
+                        switch ($row['status']) {
                             case "pending": {
-                                $status = "รออนุมัติ";
-                                $badge = "badge rounded-pill text-bg-warning text-white";
-                                break;
-                            }
+                                    $status = "รออนุมัติ";
+                                    $badge = "badge rounded-pill text-bg-warning text-white";
+                                    break;
+                                }
                             case "approved": {
-                                $status = "รอรับอะไหล่";
-                                $badge = "badge rounded-pill text-bg-primary text-white";
-                                break;
-                            }
+                                    $status = "รอรับอะไหล่";
+                                    $badge = "badge rounded-pill text-bg-primary text-white";
+                                    break;
+                                }
                             case "confirmed": {
-                                $status = "รับสำเร็จ";
-                                $badge = "badge rounded-pill text-bg-success text-white";
-                                break;
-                            }
+                                    $status = "รับสำเร็จ";
+                                    $badge = "badge rounded-pill text-bg-success text-white";
+                                    break;
+                                }
                             case "rejected": {
-                                $status = "ปฏิเสธ";
-                                $badge = "badge rounded-pill text-bg-danger text-white";
-                                $break;
-                            }
+                                    $status = "ปฏิเสธ";
+                                    $badge = "badge rounded-pill text-bg-danger text-white";
+                                    $break;
+                                }
                         }
                         $count++;
                     ?>
@@ -87,3 +105,32 @@
         });
     });
 </script>
+
+<?php
+
+if (isset($_POST['confirm'])) {
+
+    $detail_id = $_POST['detail_id'];
+    $sql = "UPDATE requests SET status = 'approved' WHERE id = $detail_id";
+    $query = mysqli_query($conn, $sql);
+    if ($query) {
+        success("อนุมัติเรียบร้อย", "");
+    } else {
+        failed("เกิดข้อผิดพลาด", "");
+    }
+}
+
+if (isset($_POST['rejected'])) {
+
+    $detail_id = $_POST['detail_id'];
+    $sql = "UPDATE requests SET status = 'rejected' WHERE id = $detail_id";
+    $query = mysqli_query($conn, $sql);
+    if ($query) {
+        success("ปฏิเสธเรียบร้อย", "");
+    } else {
+        failed("เกิดข้อผิดพลาด", "");
+    }
+}
+
+
+?>

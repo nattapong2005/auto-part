@@ -15,10 +15,10 @@
              <h3>รายละเอียด</h3>
              <a class="text-dark" href="index.php"><i class="bi bi-arrow-left-short fs-3"></i></a>
          </div>
-         <?php 
-         if($statusCheck != "pending") {
-         ?>
-         <a class="btn btn-sm btn-primary mb-2 " href="print.php?id=<?php echo $id ?>">พิมพ์เอกสาร</a>
+         <?php
+            if ($statusCheck == "confirmed") {
+            ?>
+             <a class="btn btn-sm btn-primary mb-2 " href="print.php?id=<?php echo $id ?>">พิมพ์เอกสาร</a>
          <?php } ?>
          <div class="table-responsive">
              <table class="table" id="list">
@@ -64,7 +64,12 @@
                                         break;
                                     }
                                 case "approved": {
-                                        $status = "อนุมัติ";
+                                        $status = "รอรับอะไหล่";
+                                        $badge = "badge rounded-pill text-bg-primary text-white";
+                                        break;
+                                    }
+                                case "confirmed": {
+                                        $status = "รับสำเร็จ";
                                         $badge = "badge rounded-pill text-bg-success text-white";
                                         break;
                                     }
@@ -172,48 +177,53 @@
  <?php
 
 
-
     if (isset($_POST['confirm'])) {
 
         $req_id = $_POST['req_id'];
 
         $sqlDetails = "SELECT 
-                    request_details.part_id, 
-                    request_details.amount 
-                   FROM request_details 
-                   WHERE request_details.request_id = $req_id";
+                request_details.part_id, 
+                request_details.amount 
+               FROM request_details 
+               WHERE request_details.request_id = $req_id";
+
         $queryDetails = mysqli_query($conn, $sqlDetails);
 
+        $is_stock_sufficient = true; // ใช้ตัวแปรนี้เพื่อตรวจสอบว่าจำนวนเพียงพอหรือไม่
+        $insufficient_parts = [];   // เก็บรายการอะไหล่ที่ไม่พอ
+
+        // ตรวจสอบสต๊อกของทุกอะไหล่ในคำร้อง
         while ($rowDetail = mysqli_fetch_array($queryDetails)) {
 
             $part_id = $rowDetail['part_id'];
             $requested_amount = $rowDetail['amount'];
+
             $sqlStock = "SELECT stock FROM parts WHERE id = $part_id";
             $queryStock = mysqli_query($conn, $sqlStock);
             $rowStock = mysqli_fetch_array($queryStock);
 
-            if ($rowStock['stock'] >= $requested_amount) {
-
-                $new_stock = $rowStock['stock'] - $requested_amount;
-                $sqlUpdateStock = "UPDATE parts SET stock = $new_stock WHERE id = $part_id";
-                mysqli_query($conn, $sqlUpdateStock);
-
-            } else {
-                failed("คงเหลือไม่เพียงพอ กรุณาเช็คสต๊อก", "?page=parts");
-                return;
+            if ($rowStock['stock'] < $requested_amount) {
+                $is_stock_sufficient = false; // หากชิ้นใดไม่พอ ให้เปลี่ยนตัวแปรนี้
+                $insufficient_parts[] = $part_id; // บันทึกอะไหล่ที่ไม่พอ
             }
         }
 
-        $sqlApprove = "UPDATE requests SET status = 'approved' WHERE id = $req_id";
-        $queryApprove = mysqli_query($conn, $sqlApprove);
+        if ($is_stock_sufficient) {
+            // อัปเดตสถานะคำร้องเป็น "approved"
+            $sqlApprove = "UPDATE requests SET status = 'approved' WHERE id = $req_id";
+            $queryApprove = mysqli_query($conn, $sqlApprove);
 
-        if ($queryApprove) {
-            success("อนุมัติเรียบร้อย", "index.php");
+            if ($queryApprove) {
+                success("อนุมัติเรียบร้อย", "index.php");
+            } else {
+                failed("เกิดข้อผิดพลาด", "index.php");
+            }
         } else {
-            failed("เกิดข้อผิดพลาด", "index.php");
+            // หากสต๊อกไม่เพียงพอ ให้แจ้งข้อผิดพลาด
+            // $insufficient_ids = implode(', ', $insufficient_parts); // รวมรายการอะไหล่ที่ไม่พอ
+            failed("อะไหล่บางชิ้นไม่เพียงพอ กรุณาตรวจสอบสต๊อก", "?page=parts");
         }
     }
-
 
     if (isset($_POST['rejected'])) {
 

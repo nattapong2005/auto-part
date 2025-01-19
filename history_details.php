@@ -15,11 +15,6 @@ $statusCheck = $rowCheck['status'];
             <h3>รายละเอียด</h3>
             <a class="text-dark" href="?page=history"><i class="bi bi-arrow-left-short fs-3"></i></a>
         </div>
-        <?php
-        if ($statusCheck != "pending") {
-        ?>
-            <a class="btn btn-sm btn-primary mb-2 " href="admin/print.php?id=<?php echo $id ?>">พิมพ์เอกสาร</a>
-        <?php } ?>
         <div class="table-responsive">
             <table class="table table-hover" id="list">
                 <thead>

@@ -51,19 +51,31 @@ include 'function.php';
 
                             <div class="col-md-6 mb-2">
                                 <label class="form-label"><i class="fa-solid fa-phone"></i> เบอร์โทร</label>
-                                <input type="text" placeholder="กรอกเบอร์โทร" class="form-control mb-2"  maxlength="10" name="phone" required>
+                                <input
+                                    type="tel"
+                                    placeholder="กรอกเบอร์โทร"
+                                    class="form-control mb-2"
+                                    maxlength="10"
+                                    name="phone"
+                                    required
+                                    oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10);">
                             </div>
 
                             <div class="col-md-6 mb-2">
+                                <label class="form-label"><i class="fa-solid fa-lock"></i> อีเมล</label>
+                                <input type="text" placeholder="กรอกอีเมล" class="form-control mb-2" name="email" required>
+                            </div>
+
+                            <div class="col-md-12 mb-2">
                                 <label class="form-label"><i class="fa-solid fa-address-book"></i> แผนก</label>
                                 <select class="form-select" name="department_id" required>
                                     <option value="">เลือกแผนก</option>
                                     <?php
                                     $sql = "SELECT * FROM departments";
-                                    $query = mysqli_query($conn,$sql);
-                                    while($row = mysqli_fetch_array($query)) {
+                                    $query = mysqli_query($conn, $sql);
+                                    while ($row = mysqli_fetch_array($query)) {
                                     ?>
-                                    <option value="<?php echo $row['id'] ?>"><?php echo $row['name'] ?></option>
+                                        <option value="<?php echo $row['id'] ?>"><?php echo $row['name'] ?></option>
                                     <?php } ?>
                                 </select>
                             </div>
@@ -98,24 +110,24 @@ include 'function.php';
 <?php
 
 if (isset($_POST['register'])) {
-    
+
     $name = $_POST['name'];
     $lastname = $_POST['lastname'];
     $username = $_POST['username'];
     $password = $_POST['password'];
     $password = md5($password);
     $phone = $_POST['phone'];
+    $email = $_POST['email'];
     $department_id = $_POST['department_id'];
 
-    $sql = "INSERT INTO users (name,lastname,username,password,phone,department_id,role)  VALUES
-    ('$name','$lastname','$username','$password','$phone','$department_id','user')";
-    $query = mysqli_query($conn,$sql);
-    if($query) {
+    $sql = "INSERT INTO users (name,lastname,username,password,phone,email,department_id,role)  VALUES
+    ('$name','$lastname','$username','$password','$phone','$email','$department_id','user')";
+    $query = mysqli_query($conn, $sql);
+    if ($query) {
         success("ลงทะเบียนเรียบร้อย", "login.php");
-    }else {
+    } else {
         failed("เกิดข้อผิดพลาด", "login.php");
     }
-    
 }
 
 ?>

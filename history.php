@@ -2,7 +2,10 @@
 
 	$user = $_SESSION['user'];
 	$id = $user['id'];
-	$sql = "SELECT * FROM requests WHERE user_id =  $id";
+	$sql = "SELECT *
+			FROM requests
+			WHERE user_id = $id
+			ORDER BY (status = 'pending') DESC, status";
 
 	$query = mysqli_query($conn, $sql);
 	?>
@@ -31,7 +34,12 @@
 										break;
 									}
 								case "approved": {
-										$status = "อนุมัติ";
+										$status = "รอรับอะไหล่";
+										$badge = "badge rounded-pill text-bg-primary text-white";
+										break;
+									}
+								case "confirmed": {
+										$status = "รับสำเร็จ";
 										$badge = "badge rounded-pill text-bg-success text-white";
 										break;
 									}

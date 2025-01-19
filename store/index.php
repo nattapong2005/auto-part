@@ -1,10 +1,10 @@
 <?php
 session_start();
-include 'font.php';
 include '../db.php';
 include '../function.php';
 include '../checklogin.php';
-include 'date_format.php';
+include '../admin/font.php';
+include '../admin/date_format.php';
 
 
 ?>
@@ -16,7 +16,7 @@ include 'date_format.php';
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin</title>
+    <title>Store</title>
     <!-- Bootstrap 5 CSS -->
     <link rel="stylesheet" href="../css/bootstrap.min.css">
     <script src="../js/bootstrap.bundle.min.js"></script>
@@ -39,7 +39,7 @@ include 'date_format.php';
         <!-- Sidebar Mobile -->
         <div class="offcanvas offcanvas-start bg-white text-dark d-md-none" tabindex="-1" id="sidebar">
             <div class="offcanvas-header">
-                <h1 class="ms-3">ผู้ดูแลระบบ</h1>
+                <h1 class="ms-3">แผนกสโตร์</h1>
                 <button type="button" class="btn-close btn-close-dark" data-bs-dismiss="offcanvas" aria-label="Close"></button>
             </div>
             <div class="offcanvas-body">
@@ -49,27 +49,6 @@ include 'date_format.php';
                             <i class="bi bi-house-door-fill"></i> หน้าหลัก
                         </a>
                     </li>
-
-                    <li class="nav-item">
-                        <a class="nav-link text-dark <?php echo isset($_GET['page']) && $_GET['page'] == "confirmed" ? 'active' : '' ?>" href="?page=confirmed">
-                            <i class="bi bi-check-circle-fill"></i> รับสำเร็จ
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark <?php echo isset($_GET['page']) && $_GET['page'] == "rejected" ? 'active' : '' ?>" href="?page=rejected">
-                            <i class="bi bi-x-circle-fill"></i> ปฏิเสธแล้ว
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark <?php echo isset($_GET['page']) && $_GET['page'] == "user" ? 'active' : '' ?>" href="?page=user">
-                            <i class="bi bi-person-fill"></i> ผู้ใช้งาน
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark <?php echo isset($_GET['page']) && $_GET['page'] == "parts" ? 'active' : '' ?>" href="?page=parts">
-                            <i class="bi bi-pencil-square"></i> อะไหล่
-                        </a>
-                    </li>
                 </ul>
             </div>
         </div>
@@ -77,31 +56,11 @@ include 'date_format.php';
         <!-- Sidebar for Desktop -->
         <nav class="sidebar-desktop bg-white shadow d-none d-md-block">
             <div class="position-sticky">
-                <h3 class="ms-3 py-3 text-dark">ผู้ดูแลระบบ</h3>
+                <h3 class="ms-3 py-3 text-dark">แผนกสโตร์</h3>
                 <ul class="nav flex-column">
                     <li class="nav-item">
                         <a class="nav-link text-dark <?php echo !isset($_GET['page']) && empty($_GET['page']) ? 'active' : '' ?>" href="index.php">
                             <i class="bi bi-house-door-fill"></i> หน้าหลัก
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark <?php echo isset($_GET['page']) && $_GET['page'] == "confirmed" ? 'active' : '' ?>" href="?page=confirmed">
-                            <i class="bi bi-check-circle-fill"></i> รับสำเร็จ
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark <?php echo isset($_GET['page']) && $_GET['page'] == "rejected" ? 'active' : '' ?>" href="?page=rejected">
-                            <i class="bi bi-x-circle-fill"></i> ปฏิเสธแล้ว
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark <?php echo isset($_GET['page']) && $_GET['page'] == "user" ? 'active' : '' ?>" href="?page=user">
-                            <i class="bi bi-person-fill"></i> ผู้ใช้งาน
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark <?php echo isset($_GET['page']) && $_GET['page'] == "parts" ? 'active' : '' ?>" href="?page=parts">
-                            <i class="bi bi-pencil-square"></i> อะไหล่
                         </a>
                     </li>
                 </ul>
@@ -136,17 +95,17 @@ include 'date_format.php';
 
             switch ($page) {
                 case "parts": {
-                        $file = "parts/parts.php";
-                        break;
-                    }
+                    $file = "parts/parts.php";
+                    break;
+                }
                 case "add_part": {
-                        $file = "parts/add_part.php";
-                        break;
-                    }
+                    $file = "parts/add_part.php";
+                    break;
+                }
                 case "edit_part": {
-                        $file = "parts/edit_part.php";
-                        break;
-                    }
+                    $file = "parts/edit_part.php";
+                    break;
+                }
                 case "user": {
                         $file = "users/user.php";
                         break;
@@ -165,10 +124,6 @@ include 'date_format.php';
                     }
                 case "approved": {
                         $file = "report/approved.php";
-                        break;
-                    }
-                case "confirmed": {
-                        $file = "report/confirmed.php";
                         break;
                     }
                 case "rejected": {
